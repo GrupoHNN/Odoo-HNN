@@ -36,9 +36,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Instalar dependencias adicionales si es necesario
+      - name: Instalar dependencias
         run: |
-          apt-get update && apt-get install -y git
+          apt-get update && apt-get install -y git python3-flake8
 
       - name: Validar estilo de código con flake8
         run: |
@@ -52,8 +52,10 @@ jobs:
           PGUSER: odoo
           PGPASSWORD: odoo
         run: |
+          echo "Instalando módulos: $MODS"
           odoo --addons-path=/usr/lib/python3/dist-packages/odoo/addons,custom_addons \
             --db_user=odoo \
+            --init=$MODS \
             --test-enable \
             --stop-after-init \
             --log-level=test
